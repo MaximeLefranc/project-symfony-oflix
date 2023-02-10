@@ -1,0 +1,43 @@
+{
+  "width": 632,
+  "height": 293,
+  "cx": [
+    [ "actor", 316 ],
+    [ "Acting in", 316 ],
+    [ "user", 29 ],
+    [ "published", 118 ],
+    [ "reviews", 216 ],
+    [ "written on", 316 ],
+    [ "movie", 411 ],
+    [ "belongs to", 506 ],
+    [ "genre", 600 ],
+    [ "has", 216 ],
+    [ "season", 316 ]
+  ],
+  "cy": [
+    [ "actor", 34 ],
+    [ "Acting in", 109 ],
+    [ "user", 184 ],
+    [ "published", 184 ],
+    [ "reviews", 184 ],
+    [ "written on", 184 ],
+    [ "movie", 184 ],
+    [ "belongs to", 184 ],
+    [ "genre", 184 ],
+    [ "has", 259 ],
+    [ "season", 259 ]
+  ],
+  "shift": [
+    [ "Acting in,movie,0", 0 ],
+    [ "Acting in,actor,0", 0 ],
+    [ "published,user,0", 0 ],
+    [ "published,reviews,0", 0 ],
+    [ "written on,movie,0", 0 ],
+    [ "written on,reviews,0", 0 ],
+    [ "belongs to,movie,0", 0 ],
+    [ "belongs to,genre,0", 0 ],
+    [ "has,movie,0", 0 ],
+    [ "has,season,0", 0 ]
+  ],
+  "ratio": []
+}

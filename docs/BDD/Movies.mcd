@@ -1,0 +1,14 @@
+actor: code
+
+Acting in, 0N movie, 0N actor: role
+
+user: code
+published, 0N user, 11 reviews
+reviews: code
+written on, 0N movie, 11 reviews
+movie: code
+belongs to, 1N movie, 0N genre
+genre: code
+
+has, 0N movie, 11 season
+season: code

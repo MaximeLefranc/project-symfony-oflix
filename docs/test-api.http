@@ -1,0 +1,42 @@
+// liste des films
+GET http://localhost:8080/api/movies
+
+// détails d'un film
+GET http://localhost:8080/api/movies/5165
+
+// liste des genres
+GET http://localhost:8080/api/genres
+
+// création de genre
+POST http://localhost:8080/api/genres
+// rajout du contenu à notre requete
+content-type: application/json
+
+{
+    "name": "Inca Genre du lundi matin 10h30"
+}
+
+// s'authentifier
+POST http://localhost:8080/api/login_check
+content-type: application/json
+{
+    "username":"jb@oclock.io",
+    "password":"tagada"
+}
+
+// pour être authentifier sur une route
+GET http://localhost:8080/api/genres
+// Authorization: Bearer token_sans_quote
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpYXQiOjE2NjkwMzY2MTEsImV4cCI6MTY2OTEwMTQxMSwicm9sZXMiOlsiUk9MRV9BRE1JTiIsIlJPTEVfTUFOQUdFUiIsIlJPTEVfVVNFUiJdLCJ1c2VybmFtZSI6ImpiQG9jbG9jay5pbyJ9.XnemRfxct7It3C7rIHsUPGN86OykffDTCos2m-1kWcmN6yU26v1VgJfekid2_QF176KcNm8O_Bi_Q-xOek7qkmhjVRTlyNAT6t1FnljYc2x3QRjEBZzGNkKSyd2a3oFR6dKduQohFZw20Qa4RFrqSYSRiN4IgwHdzJ-9u4j1sFRhPfSqef9rtuuKFspxPz-EYonsekSRNv-p3y4FmdkKFD8znABF-KPxpb6CGenJJY7Jsg_qI45VCCb7aX1thhoJZ-4DKrgqgOfSKgKACyLrHU0BrOMWtishlCRWeisyH9u4uHxxRVj5UicUiKPi4GYverclb_-2ksTFsIZUYrsOKQ
+
+// création de film
+POST http://localhost:8080/api/movies
+// Authorization: Bearer token_sans_quote
+content-type: application/json
+{
+  "title" : "Inca du mardi matin avec Genre",
+  "duration": 180,
+  "releaseDate": "2022-11-22",
+  "genres": [617, 618],
+  "type": "film"
+}
