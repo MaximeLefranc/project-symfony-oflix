@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Models\Movies;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -15,8 +16,12 @@ class ModelController extends AbstractController
    */
   public function home(): Response
   {
+    $movieModel = new Movies();
+    $allMovies = $movieModel->getAll();
+
     return $this->render('model/index.html.twig', [
       'title' => "Bienvenue sur O'flix !",
+      'allMovies' => $allMovies,
     ]);
   }
 
