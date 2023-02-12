@@ -20,7 +20,7 @@
       {% block nav %}
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
           <div class="container-fluid">
-            <a href="./" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none header-logo">
+            <a href={{ path('home') }} class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none header-logo">
               <img src={{ asset("favicon.png") }} height="24" alt="Logo O'flix">
               <span class="header-logo__title">O'flix</span>
             </a>
@@ -71,7 +71,7 @@
     {% block body %}{% endblock %}
     {% block footer %}
       <footer class="container-fluid py-4 border-top text-center">
-        <span class="text-muted">O'flix made with &hearts; at O'clock !
+        <span class="text-muted">O'flix made with &hearts; !
           <br><small>Thème :<a href="" class="link-secondary text-decoration-none"><i class="bi bi-toggle-on mx-1"></i>Netflix</a></small></a>
         </span>
       </footer>

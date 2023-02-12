@@ -48,4 +48,20 @@ class ModelController extends AbstractController
       'title' => 'Vos favoris',
     ]);
   }
+
+  /**
+   * Page of movies detail 
+   * @Route("/model/show/{id}", name="movie-detail-by-id", requirements={"id"="\d+"})
+   * @param int $id
+   * @return Response
+   */
+  public function show($id): Response
+  {
+    $movieModel = new Movies();
+    $movie = $movieModel->getById($id);
+    return $this->render('model/show.html.twig', [
+      'title' => "O'flix - Détails",
+      'movie' => $movie,
+    ]);
+  }
 }
