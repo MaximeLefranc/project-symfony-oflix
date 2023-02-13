@@ -11,7 +11,7 @@ class ModelController extends AbstractController
 {
   /**
    * Home page
-   * @Route ("/model", name="home")
+   * @Route ("/model", name="model_home")
    * @return Response
    */
   public function home(): Response
@@ -59,6 +59,18 @@ class ModelController extends AbstractController
   {
     $movieModel = new Movies();
     $movie = $movieModel->getById($id);
+
+    if ($movie === null) {
+      //? On utilise le système de gestion d'erreur de symfony en lançant une exception
+      //? avec le mot clé 'throw'
+      // Symfony va attraper cette exception, et générer une erreur 404
+      throw $this->createNotFoundException("Il n'y a pas de movie avec l'id " . $id);
+
+      // try {
+      // } catch (Exception $e) {
+      // }
+    }
+
     return $this->render('model/show.html.twig', [
       'title' => "O'flix - Détails",
       'movie' => $movie,
