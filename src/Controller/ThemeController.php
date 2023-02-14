@@ -33,6 +33,6 @@ class ThemeController extends AbstractController
     }
 
     // Redirect user 
-    return $this->redirectToRoute('model_home');
+    return $this->redirectToRoute('movie_browse');
   }
 }
