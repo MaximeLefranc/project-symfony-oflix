@@ -35,18 +35,19 @@
                         <i class="bi bi-star-half"></i>
                         <span class="ps-1">{{ movie.rating }}</span>
                     </div>
-
-                    <h2>3 Saisons</h2>
-                    <ul class="list-unstyled">
-                        {% for season in movie.seasons %}
-                        <li><span class="badge bg-danger fs-6 mb-2">Saison {{ season.number }}</span><small class="ms-1">({{season.nbEpisode}} épisodes)</small></li>
-                        {% endfor %}
-                    </ul>
-
+                    {% if movie.seasons|length > 0 %}
+                      <h2>{{ movie.seasons|length }} Saisons</h2>
+                      <ul class="list-unstyled">
+                          {% for season in movie.seasons %}
+                          <li><span class="badge bg-danger fs-6 mb-2">Saison {{ season.number }}</span><small class="ms-1">({{season.nbEpisode}} épisodes)</small></li>
+                          {% endfor %}
+                      </ul>
+                    {% endif %}
                     <dl class="row">
                         <dt class="col-sm-12">Avec</dt>
                         <dd class="col-sm-12">
-                            {% for casting in movie.castings|sort((a, b) => a.creditOrder <=> b.creditOrder) %}
+                            {% for casting in castings %}
+                            {# {% for casting in movie.castings|sort((a, b) => a.creditOrder <=> b.creditOrder) %}  #}
                                 {{casting.person.firstname ~ ' ' ~ casting.person.lastname}} ({{casting.role}})<br>
                             {% endfor %}
                         </dd>

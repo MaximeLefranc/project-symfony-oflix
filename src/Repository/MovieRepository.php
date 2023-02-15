@@ -39,6 +39,71 @@ class MovieRepository extends ServiceEntityRepository
         }
     }
 
+	/**
+	 * Search one movie by this id in DQL
+	 *
+	 * @param int $id
+	 * @return Movie|null
+	 */
+    public function findMovieDQL(int $id): ?Movie
+	  {
+        $query = $this->getEntityManager()->createQuery(('SELECT m FROM App\Entity\Movie m where m.id = ' . $id));
+        $movies = $query->getResult();
+        
+        $query = $this->getEntityManager()->createQuery(
+            'SELECT m, c, p, g
+            FROM App\Entity\Movie m
+            JOIN m.castings c
+            JOIN c.person p
+            JOIN m.genres g
+            WHERE m.id = ' . $id .
+            'ORDER BY c.creditOrder'
+        );
+
+        if (count($movies) === 1) {
+            return $movies[0];
+        } else {
+            return null;
+        }
+	  }
+	
+	/**
+	 * search a film by this id with Query Builder
+	 *
+	 * @param integer $id
+	 * @return Movie|null
+	 */
+    public function findQB(int $id): ?Movie
+    {
+        $result = $this->createQueryBuilder('m')
+            ->andWhere('m.id = :movie.id')
+            ->setParameter('movie_id', $id)
+            ->innerJoin('m.castings', 'c')
+            ->addSelect('c')
+            ->innerJoin('m.genres', 'g')
+            ->addSelect('g')
+            ->innerJoin('c.personn', 'p')
+            ->addSelect('p')
+            ->getQuery()
+            ->getResult();
+        
+        if (count($result) === 1) {
+        return $result[0];
+        } else {
+        return null;
+        }
+    }
+
+    public function findAllOrderByDuration(): array
+    {
+        return $this->createQueryBuilder('m')
+            ->orderBy('m.duration', 'ASC')
+            ->setMaxResults(10)
+            ->getQuery()
+            ->getResult();
+                   
+    }
+
 //    /**
 //     * @return Movie[] Returns an array of Movie objects
 //     */

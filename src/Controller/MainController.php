@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Movie;
+use App\Repository\CastingRepository;
 use App\Repository\GenreRepository;
 use App\Repository\MovieRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -24,9 +25,11 @@ class MainController extends AbstractController
     }
 
     #[Route('/movie/{id<\d+>}', name: 'movie_read')]
-    public function read($id, MovieRepository $movieRepository): Response
+    public function read($id, MovieRepository $movieRepository, CastingRepository $castingRepository): Response
     {
         $movie = $movieRepository->find($id);
+
+        $allCastingFromMovie = $castingRepository->findBy(['movie' => $id], ['creditOrder' => 'ASC']);
 
         if (!$movie) {
             throw $this->createNotFoundException('Pas de film ou serie trouvé à l\'id ' . $id);
@@ -35,6 +38,7 @@ class MainController extends AbstractController
         return $this->render('main/read.html.twig', [
             'title' => "O'flix - détail",
             'movie' => $movie,
+            'castings' => $allCastingFromMovie,
         ]);
     }
 

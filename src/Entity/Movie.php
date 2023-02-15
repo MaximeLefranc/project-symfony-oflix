@@ -41,6 +41,7 @@ class Movie
     private ?\DateTimeInterface $releaseDate = null;
 
     #[ORM\OneToMany(mappedBy: 'movie', targetEntity: Casting::class, orphanRemoval: true)]
+    #[ORM\OrderBy(['creditOrder' => 'ASC'])]
     private Collection $castings;
 
     public function __construct()
