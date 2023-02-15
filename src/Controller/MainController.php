@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Movie;
+use App\Repository\GenreRepository;
 use App\Repository\MovieRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -38,7 +39,7 @@ class MainController extends AbstractController
     }
 
     #[Route('/movie/{id<\d+>}/edit', name: 'movie_edit')]
-    public function edit(int $id, MovieRepository $movieRepository, EntityManagerInterface $entityManagerInterface): Response
+    public function edit(int $id, MovieRepository $movieRepository, GenreRepository $genreRepository, EntityManagerInterface $entityManagerInterface): Response
     {
         $movieToUpdate = $movieRepository->find($id);
 
@@ -46,11 +47,16 @@ class MainController extends AbstractController
             throw $this->createNotFoundException('Pas de film à l\'id ' . $id);
         }
 
-       $movieToUpdate->setTitle('test');
+        $allGenre = $genreRepository->findAll();
+        $randNumber = rand(0, count($allGenre)-1);
+        $randGenre = $allGenre[$randNumber];
 
-       $entityManagerInterface->flush();
+        $movieToUpdate->addGenre($randGenre);
+        $movieToUpdate->setTitle('test');
 
-       return $this->redirectToRoute('movie_read', [ 'id' => $id]);
+        $entityManagerInterface->flush();
+
+        return $this->redirectToRoute('movie_read', [ 'id' => $id]);
     }
 
     #[Route('/movie/add', name: 'movie_add')]
