@@ -58,7 +58,7 @@ class AppFixtures extends Fixture
             $genre = new Genre();
             $genre->setName('Genre n°' . $i);
             $manager->persist($genre);
-            array_push($genres, $genre);
+            $genres[] = $genre;
         };
 
         $persons = [];
@@ -67,7 +67,7 @@ class AppFixtures extends Fixture
             $person->setFirstname($this->firstname[rand(0, count($this->firstname) - 1)]);
             $person->setLastname($this->lastname[rand(0, count($this->lastname) - 1)]);
             $manager->persist($person);
-            array_push($persons, $person);
+            $persons[] = $person;
         }
 
         for ($i = 0; $i < 300; $i++) {
@@ -89,9 +89,16 @@ class AppFixtures extends Fixture
                 }
             }
 
-            for ($k=0; $k < rand(2, 4); $k++) { 
-                $indexGenre = rand(1, 49);
-                $movie->addGenre($genres[$indexGenre]);
+            $genreAllreadyAdded[] = $movie->getGenres();
+            for ($k=0; $k <= rand(1, 4); $k++) { 
+                $genreToAdd = $genres[rand(0, count($genres) - 1)];
+
+                if (!in_array($genreToAdd, $genreAllreadyAdded)) {
+                    $movie->addGenre($genreToAdd);
+                    $genreAllreadyAdded[] = $genreToAdd;
+                } else {
+                    $k--;
+                }
             }
 
             for ($l=1; $l < rand(2, 4) ; $l++) { 
