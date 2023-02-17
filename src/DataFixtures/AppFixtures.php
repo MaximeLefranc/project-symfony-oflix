@@ -110,7 +110,7 @@ class AppFixtures extends Fixture
                 $manager->persist($casting);
             }
 
-
+            // $movie->setPoster('https://amc-theatres-res.cloudinary.com/amc-cdn/static/images/fallbacks/DefaultOneSheetPoster.jpg');
             $movie->setDuration(rand(10,300));
             $movie->setReleaseDate(new DateTime());
             $manager->persist($movie);

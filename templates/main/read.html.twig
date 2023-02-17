@@ -8,7 +8,7 @@
         <div class="col">
 
             <div
-                class="row g-0 borderrr rrrounded overflow-hidden flex-md-row align-items-start mb-4 shadow-smmm position-relative">
+                class="row g-0 border rounded overflow-hidden flex-md-row align-items-start mb-4 shadow-smmm position-relative">
                 <div class="col-4 movie__poster img-thumbnail"
                     style="background-image: url({{ movie.poster }});">
                     <img src={{ asset("images/poster-placeholder.png") }} class="img-fluid">
@@ -56,7 +56,24 @@
                         <dt class="col-sm-12">Année</dt>
                         <dd class="col-sm-12">{{movie.releaseDate|date('Y')}}</dd>
                     </dl>
-
+                    <div>
+                      <a class="btn btn-info" href={{ path('review_add', {id: movie.id}) }}>Ajouter une critique</a>
+                      <div class='row row-cols-1 row-cols-md-2 g-4 mt-1'>
+                        {% for review in movie.reviews %}
+                          <div class='col'>
+                            <div class='card'>
+                              <div class='card-body'>
+                                <h5 class='card-title'>Critique de {{review.username}}</h5>
+                                <em>film vu le {{review.watchedAt|date('d/m/Y')}}</em>
+                                <p class='card-text'>{{review.content}}</p>
+                              </div>
+                            </div>
+                          </div>
+                        {% else %}
+                          <em>Pas de critique pour l'instant, ajoutez-en une !</em>
+                        {% endfor %}
+                      </div>
+                    </div>
                 </div>
             </div>
 
