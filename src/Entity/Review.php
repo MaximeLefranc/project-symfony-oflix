@@ -42,7 +42,7 @@ class Review
     private array $reactions = [];
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    #[Assert\NotBlank(message: 'Quand avez vous regardé ce film ?')]
+    #[Assert\NotNull(message: 'Quand avez vous regardé ce film ?')]
     private ?\DateTimeInterface $watchedAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'reviews')]

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\Frontoffice;
 
 use App\Entity\Review;
 use App\Form\ReviewType;
@@ -32,7 +32,7 @@ class ReviewController extends AbstractController
             return $this->redirectToRoute('movie_read', ['id' => $id]);
         }
 
-        return $this->render('review/add-rewiew.html.twig', [
+        return $this->render('frontoffice/review/add-rewiew.html.twig', [
             'movie' => $movie,
             'form' => $form->createView(),
         ]);

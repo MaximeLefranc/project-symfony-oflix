@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\Frontoffice;
 
 use App\Entity\Movie;
 use App\Repository\CastingRepository;
@@ -18,7 +18,7 @@ class MainController extends AbstractController
     { 
         $allMovies = $movieRepository->findAll();
 
-        return $this->render('main/index.html.twig', [
+        return $this->render('frontoffice/main/index.html.twig', [
             'title' => "Bienvenue sur O'flix !",
             'allMovies' => $allMovies,
         ]);
@@ -35,7 +35,7 @@ class MainController extends AbstractController
             throw $this->createNotFoundException('Pas de film ou serie trouvé à l\'id ' . $id);
         }
 
-        return $this->render('main/read.html.twig', [
+        return $this->render('frontoffice/main/read.html.twig', [
             'title' => "O'flix - détail",
             'movie' => $movie,
             'castings' => $allCastingFromMovie,
