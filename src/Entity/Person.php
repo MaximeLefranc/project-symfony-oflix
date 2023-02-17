@@ -87,4 +87,14 @@ class Person
 
         return $this;
     }
+
+    /**
+     * Return for form the firstname and lastname of one actor
+     *
+     * @return string
+     */
+    public function getFullName(): string
+    {
+        return $this->getFirstname() . ' ' . $this->getLastname();
+    }
 }
