@@ -28,10 +28,14 @@ class GenreController extends AbstractController
     $form = $this->createForm(GenreType::class, $genre);
     $form->handleRequest($request);
 
-    if ($form->isSubmitted() && $form->isValid()) {
-      $genreRepository->save($genre, true);
+    if ($form->isSubmitted()) {
+      if ($form->isValid()) {
+        $genreRepository->save($genre, true);
 
-      return $this->redirectToRoute('backoffice_genre_index', [], Response::HTTP_SEE_OTHER);
+        $this->addFlash('success', 'Le genre a bien été ajouté.');
+        return $this->redirectToRoute('backoffice_genre_index', [], Response::HTTP_SEE_OTHER);
+      }
+      $this->addFlash('danger', 'Une erreur est survenue lors de l\'ajout du genre.');
     }
 
     return $this->renderForm('backoffice/genre/new.html.twig', [
@@ -54,10 +58,14 @@ class GenreController extends AbstractController
     $form = $this->createForm(GenreType::class, $genre);
     $form->handleRequest($request);
 
-    if ($form->isSubmitted() && $form->isValid()) {
-      $genreRepository->save($genre, true);
+    if ($form->isSubmitted()) {
+      if ($form->isValid()) {
+        $genreRepository->save($genre, true);
 
-      return $this->redirectToRoute('backoffice_genre_index', [], Response::HTTP_SEE_OTHER);
+        $this->addFlash('success', 'Le genre a bien été modifié.');
+        return $this->redirectToRoute('backoffice_genre_index', [], Response::HTTP_SEE_OTHER);
+      }
+      $this->addFlash('danger', 'Une erreur est survenue lors de la modification du genre.');
     }
 
     return $this->renderForm('backoffice/genre/edit.html.twig', [
@@ -71,6 +79,9 @@ class GenreController extends AbstractController
   {
     if ($this->isCsrfTokenValid('delete' . $genre->getId(), $request->request->get('_token'))) {
       $genreRepository->remove($genre, true);
+      $this->addFlash('success', 'Le genre a bien été supprimé.');
+    } else {
+      $this->addFlash('danger', 'Une erreur est survenue lors de la suppression du genre.');
     }
 
     return $this->redirectToRoute('backoffice_genre_index', [], Response::HTTP_SEE_OTHER);

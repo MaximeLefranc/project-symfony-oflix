@@ -110,8 +110,10 @@
 					</div>
 				</nav>
 			{% endblock %}
-			<div class="container"> {% block body %}{% endblock %}
-				</div>
+			<div class="container">
+				{{ include('backoffice/partials/_flash_message.html.twig') }}
+       {% block body %}{% endblock %}
+			</div>
 				{% block footer %}
 					<footer class="container-fluid py-4 border-top text-center">
 						<span class="text-muted">O'flix made with &hearts; !

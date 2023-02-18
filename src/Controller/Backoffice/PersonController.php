@@ -28,10 +28,14 @@ class PersonController extends AbstractController
     $form = $this->createForm(PersonType::class, $person);
     $form->handleRequest($request);
 
-    if ($form->isSubmitted() && $form->isValid()) {
-      $personRepository->save($person, true);
+    if ($form->isSubmitted()) {
+      if ($form->isValid()) {
+        $personRepository->save($person, true);
 
-      return $this->redirectToRoute('backoffice_person_index', [], Response::HTTP_SEE_OTHER);
+        $this->addFlash('success', 'L\'acteur a bien été ajouté.');
+        return $this->redirectToRoute('backoffice_person_index', [], Response::HTTP_SEE_OTHER);
+      }
+      $this->addFlash('danger', 'Une erreur est survenue lors de l\'ajout de l\'acteur.');
     }
 
     return $this->renderForm('backoffice/person/new.html.twig', [
@@ -54,10 +58,14 @@ class PersonController extends AbstractController
     $form = $this->createForm(PersonType::class, $person);
     $form->handleRequest($request);
 
-    if ($form->isSubmitted() && $form->isValid()) {
-      $personRepository->save($person, true);
+    if ($form->isSubmitted()) {
+      if ($form->isValid()) {
+        $personRepository->save($person, true);
 
-      return $this->redirectToRoute('app_backoffice_person_index', [], Response::HTTP_SEE_OTHER);
+        $this->addFlash('success', 'L\'acteur a été modifié avec succès.');
+        return $this->redirectToRoute('app_backoffice_person_index', [], Response::HTTP_SEE_OTHER);
+      }
+      $this->addFlash('danger', 'Une erreur est survenue lors de la modification de l\'acteur.');
     }
 
     return $this->renderForm('backoffice/person/edit.html.twig', [
@@ -71,6 +79,9 @@ class PersonController extends AbstractController
   {
     if ($this->isCsrfTokenValid('delete' . $person->getId(), $request->request->get('_token'))) {
       $personRepository->remove($person, true);
+      $this->addFlash('success', 'L\'acteur a bien été supprimé.');
+    } else {
+      $this->addFlash('danger', 'Une erreur est survenue lors de la suppression de l\'acteur.');
     }
 
     return $this->redirectToRoute('backoffice_person_index', [], Response::HTTP_SEE_OTHER);
