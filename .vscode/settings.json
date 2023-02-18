@@ -2,5 +2,11 @@
   "editor.tokenColorCustomizations": {
     "comments": "",
     "textMateRules": []
-  }
+},
+"[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+},
+"[php]": {
+    "editor.defaultFormatter": "bmewburn.vscode-intelephense-client"
+}
 }

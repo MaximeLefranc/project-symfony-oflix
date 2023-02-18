@@ -4,8 +4,8 @@
 
 {% block body %}
     <h1>Create new Casting</h1>
+    <a class="btn btn-info" href="{{ path('backoffice_casting_index') }}">back to list</a>
 
     {{ include('backoffice/casting/_form.html.twig') }}
 
-    <a href="{{ path('backoffice_casting_index') }}">back to list</a>
 {% endblock %}
