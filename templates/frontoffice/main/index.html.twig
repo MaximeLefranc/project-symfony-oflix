@@ -53,15 +53,11 @@
                         <p><small> movie.summary </small>
                         </p>
                         <div class="d-flex" style="color: orange;">
-                          {# {% for i in 0..4 %}
-                              {% if (i < movie.rating) %}
-                                <i class="bi bi-star-fill"></i>
-                              {% elseif round(movie.rating) > movie.rating %}
-                                <i class="bi bi-star-half"></i>
-                              {% else %}
-                                <i class="bi bi-star"></i>
-                              {% endif %}
-                          {% endfor %} #}                           
+                          {% set rating = movie.rating %}
+                          {% for i in range(0, 4) %}
+                              {% set starClass = rating - i >= 1 ? '-fill' : (rating - i >= 0.5 ? '-half' : '') %}
+                              <i class='bi bi-star{{starClass}}' ></i> 
+                          {% endfor %}                           
                             <span class="ps-1">{{ movie.rating }}</span>
                         </div>
                         <a href={{ path('movie_read', {id: movie.id}) }}  class="fs-1 mt-3 text-danger align-self-start">

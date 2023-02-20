@@ -6,6 +6,7 @@ use App\Entity\Movie;
 use App\Form\MovieType;
 use App\Repository\MovieRepository;
 use DateTime;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,14 +19,19 @@ class MovieController extends AbstractController
   #[Route('/', name: 'app_backoffice_movie_index', methods: ['GET'])]
   public function index(MovieRepository $movieRepository): Response
   {
+    // $this->denyAccessUnlessGranted('ROLE_LIST');
+
     return $this->render('backoffice/movie/index.html.twig', [
       'movies' => $movieRepository->findAll(),
     ]);
   }
 
   #[Route('/new', name: 'app_backoffice_movie_new', methods: ['GET', 'POST'])]
+  #[IsGranted('ROLE_MANAGER')]
   public function new(Request $request, MovieRepository $movieRepository): Response
   {
+    // $this->denyAccessUnlessGranted('ROLE_ADD');
+
     $movie = new Movie();
     $form = $this->createForm(MovieType::class, $movie);
     $form->handleRequest($request);

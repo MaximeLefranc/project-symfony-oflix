@@ -28,11 +28,11 @@
                     <p>movie.synopsis
                     </p>
                     <div class="d-flex mb-4" style="color: orange;">
-                        <i class="bi bi-star-fill"></i>
-                        <i class="bi bi-star-fill"></i>
-                        <i class="bi bi-star-fill"></i>
-                        <i class="bi bi-star-fill"></i>
-                        <i class="bi bi-star-half"></i>
+                        {% set rating = movie.rating %}
+                          {% for i in range(0, 4) %}
+                              {% set starClass = rating - i >= 1 ? '-fill' : (rating - i >= 0.5 ? '-half' : '') %}
+                              <i class='bi bi-star{{starClass}}' ></i> 
+                        {% endfor %}        
                         <span class="ps-1">{{ movie.rating }}</span>
                     </div>
                     {% if movie.seasons|length > 0 %}
@@ -57,7 +57,9 @@
                         <dd class="col-sm-12">{{movie.releaseDate|date('Y')}}</dd>
                     </dl>
                     <div>
-                      <a class="btn btn-info" href={{ path('review_add', {id: movie.id}) }}>Ajouter une critique</a>
+                      {% if is_granted('ROLE_USER') %}
+                        <a class="btn btn-info" href={{ path('review_add', {id: movie.id}) }}>Ajouter une critique</a>
+                      {% endif %}
                       <div class='row row-cols-1 row-cols-md-2 g-4 mt-1'>
                         {% for review in movie.reviews %}
                           <div class='col'>
