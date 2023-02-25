@@ -8,6 +8,7 @@ use App\Entity\Genre;
 use App\Entity\Movie;
 use App\Entity\Person;
 use App\Entity\Season;
+use App\Services\OmdbApi;
 use DateTime;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
@@ -15,12 +16,19 @@ use Faker\Factory;
 
 class AppFixtures extends Fixture
 {
+    private $omdbApi;
+
+    public function __construct(OmdbApi $omdbApi)
+    {
+        $this->omdbApi = $omdbApi;
+    }
+
     /**
      * @param ObjectManager $manager c'est le parent de EntityManager, c'est lui qui demande le persist() et le flush()
      */
     public function load(ObjectManager $manager): void
     {
-        
+
         // use the factory to create a Faker\Generator instance
         // use Faker\Factory;
         //? https://fakerphp.github.io/locales/fr_FR/
@@ -29,6 +37,9 @@ class AppFixtures extends Fixture
         //on ajoute notre provider, on va pouvoir l'utiliser comme si c'était inclus dans le faker
         $faker->addProvider(new GenreProvider($faker));
 
+        // add faker movies provider
+        $faker->addProvider(new \Xylis\FakerCinema\Provider\Movie($faker));
+
         // Pour avoir toujours les mêmes données (le même hasard)
         //? https://fakerphp.github.io/#seeding-the-generator
         $faker->seed(2022);
@@ -36,7 +47,7 @@ class AppFixtures extends Fixture
         // TODO : person
         $allPerson = [];
         // 300 films, 3 acteurs/film ~ 900
-        for ($i=0; $i < 900; $i++) { 
+        for ($i = 0; $i < 900; $i++) {
             $person = new Person();
             $person->setFirstname($faker->firstName());
             $person->setLastname($faker->lastName());
@@ -66,7 +77,7 @@ class AppFixtures extends Fixture
         //? $allGenre contient tout les genres
         // et pendant la génération de Movie, faire une association aléatoirement
 
-        
+
         // TODO : je veux des saisons, uniquement pour les movie qui sont de type serie
 
         // 1. faire un random sur film OU serie
@@ -75,21 +86,21 @@ class AppFixtures extends Fixture
 
         // TODO : je veux des films, PLEIN de films !!!!!!!!
         $allMovies = [];
-        for ($i=0; $i < 300; $i++) { 
+        for ($i = 0; $i < 300; $i++) {
             // les rushs :D
             $movie = new Movie();
-            $movie->setTitle("Film #" . $i);
+            $movie->setTitle($faker->movie());
 
             // TODO : random film/serie
             //? https://fakerphp.github.io/formatters/numbers-and-strings/#randomelement
             $movie->setType($faker->randomElement(['film', 'serie']));
 
             // * gestion des seasons
-            if ($movie->getType() === 'serie'){
-                $nbSeason = rand(1,10);
+            if ($movie->getType() === 'serie') {
+                $nbSeason = rand(1, 10);
                 //! attention à ne pas utiliser le même index dans des boucles imbriquées
                 //? mini = 1, et maxi = nbSeason
-                for ($j=1; $j <= $nbSeason; $j++) { 
+                for ($j = 1; $j <= $nbSeason; $j++) {
                     $season = new Season();
                     // de 1 à nbSeason
                     $season->setNumber($j);
@@ -108,10 +119,10 @@ class AppFixtures extends Fixture
             // récupère la liste des genres existant dans Movie
             $genresAlreadyAdded[] = $movie->getGenres();
             // entre 1 et 4 genre
-            for ($k=0; $k<rand(1, 5); $k++) {
+            for ($k = 0; $k < rand(1, 5); $k++) {
                 // sélection aléatoire
-                $genreToAdd = $allGenre[rand(0, count($allGenre)-1)];
-                
+                $genreToAdd = $allGenre[rand(0, count($allGenre) - 1)];
+
                 // check que le genre aléatoire n'est pas dans la liste déjà existante
                 if (!in_array($genreToAdd, $genresAlreadyAdded)) {
                     // si il n'est pas dans la liste on l'ajoute
@@ -134,7 +145,7 @@ class AppFixtures extends Fixture
             //? https://fakerphp.github.io/formatters/numbers-and-strings/#randomfloat
             $movie->setRating($faker->randomFloat(1, 1, 5));
 
-            $movie->setPoster("https://amc-theatres-res.cloudinary.com/amc-cdn/static/images/fallbacks/DefaultOneSheetPoster.jpg");
+            $movie->setPoster($this->omdbApi->fetchPoster($movie->getTitle()));
 
             // un sentence va contenir 6 mots, ce qui ressemble à un résumé
             $movie->setSummary($faker->sentence());
@@ -159,15 +170,15 @@ class AppFixtures extends Fixture
         // ? on va plutot partie de liste des movies
         foreach ($allMovies as $movie) {
             // TODO : plusieur casting, donc une boucle de création de casting, donc un nombre aléatoire
-            $nbCasting = rand(1,4);
+            $nbCasting = rand(1, 4);
             // TODO : dans la boucle de casting, de la même façon que Genre on va devoir check si l'acteur est déjà présent OU pas
-            for ($i=1; $i <= $nbCasting; $i++) {
+            for ($i = 1; $i <= $nbCasting; $i++) {
                 // TODO : utiliser le faker pour toutes les chaines de caractères.
                 $casting = new Casting();
                 // j'associe le film
                 $casting->setMovie($movie);
                 // la personne aléatoire
-                $randIndexPerson = rand(0, count($allPerson) -1);
+                $randIndexPerson = rand(0, count($allPerson) - 1);
                 $randPerson = $allPerson[$randIndexPerson];
                 $casting->setPerson($randPerson);
                 // donner un nom de role
@@ -185,4 +196,3 @@ class AppFixtures extends Fixture
         $manager->flush();
     }
 }
-

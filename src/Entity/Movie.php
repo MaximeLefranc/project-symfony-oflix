@@ -30,7 +30,6 @@ class Movie
 
   #[ORM\Column(length: 255, nullable: true)]
   #[Assert\Url]
-  #[Assert\NotBlank(message: 'Veuillez entrer l\'URL d\'un film.')]
   private ?string $poster = null;
 
   #[ORM\Column(length: 5)]

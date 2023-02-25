@@ -72,7 +72,11 @@
                             </div>
                           </div>
                         {% else %}
-                          <em>Pas de critique pour l'instant, ajoutez-en une !</em>
+                          {% if is_granted('ROLE_USER') %}
+                            <em>Pas de commentaire, ajoutez-en un !</em>
+                          {% else %}
+                            <a class="btn - btn-sm btn-primary" href={{ path('app_login') }}>Veuillez vous identidier pour ajouter une critique</a>
+                          {% endif %}
                         {% endfor %}
                       </div>
                     </div>

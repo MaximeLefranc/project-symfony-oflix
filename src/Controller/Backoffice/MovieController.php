@@ -5,6 +5,7 @@ namespace App\Controller\Backoffice;
 use App\Entity\Movie;
 use App\Form\MovieType;
 use App\Repository\MovieRepository;
+use App\Services\OmdbApi;
 use DateTime;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -28,7 +29,7 @@ class MovieController extends AbstractController
 
   #[Route('/new', name: 'app_backoffice_movie_new', methods: ['GET', 'POST'])]
   #[IsGranted('ROLE_MANAGER')]
-  public function new(Request $request, MovieRepository $movieRepository): Response
+  public function new(Request $request, MovieRepository $movieRepository, OmdbApi $omdbApi): Response
   {
     // $this->denyAccessUnlessGranted('ROLE_ADD');
 
@@ -38,6 +39,8 @@ class MovieController extends AbstractController
 
     if ($form->isSubmitted()) {
       if ($form->isValid()) {
+        // Search poster with the name of movie
+        $movie->setPoster($omdbApi->fetchPoster($movie->getTitle()));
         $movieRepository->save($movie, true);
 
         $this->addFlash('success', 'Le film/serie a bien été ajouté.');
@@ -85,6 +88,7 @@ class MovieController extends AbstractController
   }
 
   #[Route('/{id}', name: 'app_backoffice_movie_delete', methods: ['POST'])]
+  #[IsGranted('ROLE_ADMIN')]
   public function delete(Request $request, Movie $movie, MovieRepository $movieRepository): Response
   {
     if ($this->isCsrfTokenValid('delete' . $movie->getId(), $request->request->get('_token'))) {
