@@ -25,10 +25,10 @@ class MainController extends AbstractController
     ]);
   }
 
-  #[Route('/movie/{id<\d+>}', name: 'movie_read')]
-  public function read($id, MovieRepository $movieRepository, CastingRepository $castingRepository): Response
+  #[Route('/movie/{slug}', name: 'movie_read')]
+  public function read(Movie $movie, CastingRepository $castingRepository): Response
   {
-    $movie = $movieRepository->find($id);
+    $id = $movie->getId();
 
     $allCastingFromMovie = $castingRepository->findBy(['movie' => $id], ['creditOrder' => 'ASC']);
 
