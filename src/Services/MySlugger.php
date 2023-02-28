@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
 class MySlugger
@@ -10,10 +9,10 @@ class MySlugger
   private $slugger;
   private $isLowerCase;
 
-  public function __construct(SluggerInterface $sluggerInterface, ParameterBagInterface $params)
+  public function __construct(SluggerInterface $sluggerInterface, $lower)
   {
     $this->slugger = $sluggerInterface;
-    $this->isLowerCase = $params->get('app.myslugger.islower');
+    $this->isLowerCase = $lower;
   }
 
   public function slugify($title)

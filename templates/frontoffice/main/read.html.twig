@@ -25,8 +25,7 @@
                             <span class="badge bg-warning text-dark">{{ genre.name }}</span>
                         {% endfor %}
                     </p>
-                    <p>movie.synopsis
-                    </p>
+                    <p>{{ movie.synopsis }}</p>
                     <div class="d-flex mb-4" style="color: orange;">
                         {% set rating = movie.rating %}
                           {% for i in range(0, 4) %}
@@ -52,7 +51,7 @@
                             {% endfor %}
                         </dd>
                         <dt class="col-sm-12">Pays</dt>
-                        <dd class="col-sm-12">USA</dd>
+                        <dd class="col-sm-12">{{ movie.country }}</dd>
                         <dt class="col-sm-12">Année</dt>
                         <dd class="col-sm-12">{{movie.releaseDate|date('Y')}}</dd>
                     </dl>

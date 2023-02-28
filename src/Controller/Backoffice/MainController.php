@@ -11,7 +11,6 @@ class MainController extends AbstractController
     #[Route('/backoffice/', name: 'backoffice_main')]
     public function index(): Response
     {
-        return $this->render('backoffice/main/index.html.twig', [
-        ]);
+        return $this->render('backoffice/main/index.html.twig', []);
     }
 }

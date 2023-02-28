@@ -39,8 +39,9 @@ class AppFixtures extends Fixture
     //on ajoute notre provider, on va pouvoir l'utiliser comme si c'était inclus dans le faker
     $faker->addProvider(new GenreProvider($faker));
 
-    // add faker movies provider
+    // add faker movies and series provider
     $faker->addProvider(new \Xylis\FakerCinema\Provider\Movie($faker));
+    $faker->addProvider(new \Xylis\FakerCinema\Provider\TvShow($faker));
 
     // Pour avoir toujours les mêmes données (le même hasard)
     //? https://fakerphp.github.io/#seeding-the-generator
@@ -91,7 +92,6 @@ class AppFixtures extends Fixture
     for ($i = 0; $i < 300; $i++) {
       // les rushs :D
       $movie = new Movie();
-      $movie->setTitle($faker->movie());
 
       // TODO : random film/serie
       //? https://fakerphp.github.io/formatters/numbers-and-strings/#randomelement
@@ -99,6 +99,8 @@ class AppFixtures extends Fixture
 
       // * gestion des seasons
       if ($movie->getType() === 'serie') {
+        $movie->setTitle($faker->tvShow());
+
         $nbSeason = rand(1, 10);
         //! attention à ne pas utiliser le même index dans des boucles imbriquées
         //? mini = 1, et maxi = nbSeason
@@ -113,6 +115,8 @@ class AppFixtures extends Fixture
           // ne pas oublier de l'ajouter à la série
           $movie->addSeason($season);
         }
+      } else {
+        $movie->setTitle($faker->movie());
       }
 
       // * gestion des genres

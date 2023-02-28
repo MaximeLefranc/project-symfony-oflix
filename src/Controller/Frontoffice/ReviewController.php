@@ -13,28 +13,28 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ReviewController extends AbstractController
 {
-    #[Route('/movie/{id<\d+>}/review', name: 'review_add', methods: ['GET', 'POST'])]
-    public function add(int $id, MovieRepository $movieRepository, ReviewRepository $reviewRepository, Request $request): Response
-    {
-        $movie = $movieRepository->find($id);
-        if (!$movie) {
-          throw $this->createNotFoundException('Film introuvable avec l\'id ' . $id);
-        }
-
-        $review = new Review();
-        $form = $this->createForm(ReviewType::class, $review);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $review->setMovie($movie);
-            $reviewRepository->save($review, true);
-
-            return $this->redirectToRoute('movie_read', ['id' => $id]);
-        }
-
-        return $this->render('frontoffice/review/add-rewiew.html.twig', [
-            'movie' => $movie,
-            'form' => $form->createView(),
-        ]);
+  #[Route('/movie/{id<\d+>}/review', name: 'review_add', methods: ['GET', 'POST'])]
+  public function add(int $id, MovieRepository $movieRepository, ReviewRepository $reviewRepository, Request $request): Response
+  {
+    $movie = $movieRepository->find($id);
+    if (!$movie) {
+      throw $this->createNotFoundException('Film introuvable avec l\'id ' . $id);
     }
+
+    $review = new Review();
+    $form = $this->createForm(ReviewType::class, $review);
+    $form->handleRequest($request);
+
+    if ($form->isSubmitted() && $form->isValid()) {
+      $review->setMovie($movie);
+      $reviewRepository->save($review, true);
+
+      return $this->redirectToRoute('movie_read', ['slug' => $movie->getSlug()]);
+    }
+
+    return $this->render('frontoffice/review/add-rewiew.html.twig', [
+      'movie' => $movie,
+      'form' => $form->createView(),
+    ]);
+  }
 }

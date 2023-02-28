@@ -5,6 +5,7 @@ namespace App\Controller\Backoffice;
 use App\Entity\Movie;
 use App\Form\MovieType;
 use App\Repository\MovieRepository;
+use App\Services\MySlugger;
 use App\Services\OmdbApi;
 use DateTime;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -29,7 +30,7 @@ class MovieController extends AbstractController
 
   #[Route('/new', name: 'app_backoffice_movie_new', methods: ['GET', 'POST'])]
   #[IsGranted('ROLE_MANAGER')]
-  public function new(Request $request, MovieRepository $movieRepository, OmdbApi $omdbApi): Response
+  public function new(Request $request, MovieRepository $movieRepository, OmdbApi $omdbApi, MySlugger $slugger): Response
   {
     // $this->denyAccessUnlessGranted('ROLE_ADD');
 
@@ -39,6 +40,7 @@ class MovieController extends AbstractController
 
     if ($form->isSubmitted()) {
       if ($form->isValid()) {
+        $movie->setSlug($slugger->slugify($movie->getTitle()));
         // Search poster with the name of movie
         $movie->setPoster($omdbApi->fetchPoster($movie->getTitle()));
         $movieRepository->save($movie, true);
@@ -64,13 +66,14 @@ class MovieController extends AbstractController
   }
 
   #[Route('/{id}/edit', name: 'app_backoffice_movie_edit', methods: ['GET', 'POST'])]
-  public function edit(Request $request, Movie $movie, MovieRepository $movieRepository): Response
+  public function edit(Request $request, Movie $movie, MovieRepository $movieRepository, MySlugger $slugger): Response
   {
     $form = $this->createForm(MovieType::class, $movie);
     $form->handleRequest($request);
 
     if ($form->isSubmitted()) {
       if ($form->isValid()) {
+        $movie->setSlug($slugger->slugify($movie->getTitle()));
         $movie->setUpdatedAt(new DateTime());
         $movieRepository->save($movie, true);
 
