@@ -39,17 +39,17 @@ class MovieRepository extends ServiceEntityRepository
         }
     }
 
-	/**
-	 * Search one movie by this id in DQL
-	 *
-	 * @param int $id
-	 * @return Movie|null
-	 */
+    /**
+     * Search one movie by this id in DQL
+     *
+     * @param int $id
+     * @return Movie|null
+     */
     public function findMovieDQL(int $id): ?Movie
-	  {
+    {
         $query = $this->getEntityManager()->createQuery(('SELECT m FROM App\Entity\Movie m where m.id = ' . $id));
         $movies = $query->getResult();
-        
+
         $query = $this->getEntityManager()->createQuery(
             'SELECT m, c, p, g
             FROM App\Entity\Movie m
@@ -57,7 +57,7 @@ class MovieRepository extends ServiceEntityRepository
             JOIN c.person p
             JOIN m.genres g
             WHERE m.id = ' . $id .
-            'ORDER BY c.creditOrder'
+                'ORDER BY c.creditOrder'
         );
 
         if (count($movies) === 1) {
@@ -65,14 +65,14 @@ class MovieRepository extends ServiceEntityRepository
         } else {
             return null;
         }
-	  }
-	
-	/**
-	 * search a film by this id with Query Builder
-	 *
-	 * @param integer $id
-	 * @return Movie|null
-	 */
+    }
+
+    /**
+     * search a film by this id with Query Builder
+     *
+     * @param integer $id
+     * @return Movie|null
+     */
     public function findQB(int $id): ?Movie
     {
         $result = $this->createQueryBuilder('m')
@@ -86,11 +86,11 @@ class MovieRepository extends ServiceEntityRepository
             ->addSelect('p')
             ->getQuery()
             ->getResult();
-        
+
         if (count($result) === 1) {
-        return $result[0];
+            return $result[0];
         } else {
-        return null;
+            return null;
         }
     }
 
@@ -101,31 +101,44 @@ class MovieRepository extends ServiceEntityRepository
             ->setMaxResults(10)
             ->getQuery()
             ->getResult();
-                   
     }
 
-//    /**
-//     * @return Movie[] Returns an array of Movie objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('m')
-//            ->andWhere('m.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('m.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    public function findRandomMovie(): array
+    {
+        $connection = $this->getEntityManager()->getConnection();
 
-//    public function findOneBySomeField($value): ?Movie
-//    {
-//        return $this->createQueryBuilder('m')
-//            ->andWhere('m.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+        $sql = 'SELECT *
+				FROM `movie`
+				ORDER BY Rand()
+				LIMIT 1';
+
+        $result = $connection->executeQuery($sql);
+
+        return $result->fetchAssociative();
+    }
+
+    //    /**
+    //     * @return Movie[] Returns an array of Movie objects
+    //     */
+    //    public function findByExampleField($value): array
+    //    {
+    //        return $this->createQueryBuilder('m')
+    //            ->andWhere('m.exampleField = :val')
+    //            ->setParameter('val', $value)
+    //            ->orderBy('m.id', 'ASC')
+    //            ->setMaxResults(10)
+    //            ->getQuery()
+    //            ->getResult()
+    //        ;
+    //    }
+
+    //    public function findOneBySomeField($value): ?Movie
+    //    {
+    //        return $this->createQueryBuilder('m')
+    //            ->andWhere('m.exampleField = :val')
+    //            ->setParameter('val', $value)
+    //            ->getQuery()
+    //            ->getOneOrNullResult()
+    //        ;
+    //    }
 }

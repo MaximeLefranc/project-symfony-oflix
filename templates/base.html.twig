@@ -57,6 +57,8 @@
     {% block body %}{% endblock %}
     {% block footer %}
       <footer class="container-fluid py-4 border-top text-center">
+        <a href={{ path('movie_read', {slug: randomMovie.slug}) }}>{{ randomMovie.title }}</a>
+        <br>
         <span class="text-muted">O'flix made with &hearts; !
           <br><small>Thème :<a href={{ path('toggle-theme')}} class="link-secondary text-decoration-none"><i class="bi bi-toggle-on mx-1"></i>Netflix</a></small></a>
         </span>

@@ -6,6 +6,7 @@
 parameters:
   app.omdbapi.apikey: '%env(strng:OMDB_API_KEY)%'
   app.myslugger.islower: '%env(bool:SLUG_LOWER_CASE)%'
+  app.maintenancesubscriber.sooninmaintenance: '%env(bool:SOON_IN_MAINTENANCE)%'
 
 services:
   # default configuration for services in *this* file
@@ -31,3 +32,7 @@ services:
   App\Services\OmdbApi:
       arguments:
             $apiKey: '%app.omdbapi.apikey%'
+
+  App\EventSubscriber\MaintenanceSubscriber:
+      arguments:
+            $soonInMaintenance: '%app.maintenancesubscriber.sooninmaintenance%'
