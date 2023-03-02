@@ -7,17 +7,21 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Controller\Api\ApiController;
 use App\Entity\Movie;
+use Exception;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class MovieController extends ApiController
 {
-    #[Route('/api/movies', name: 'app_api_movies_browse')]
+    #[Route('/api/movies', name: 'app_api_movies_browse', methods: ['GET'])]
     public function browse(MovieRepository $movieRepository): JsonResponse
     {
         return $this->json200($movieRepository->findAll(), ['movie_browse']);
     }
 
-    #[Route('api/movies/{id<\d+>}', name: 'app_api_movies_read')]
-    public function read(Movie $movie = null)
+    #[Route('api/movies/{id<\d+>}', name: 'app_api_movies_read', methods: ['GET'])]
+    public function read(Movie $movie = null): JsonResponse
     {
         if (!$movie) {
             return $this->json404('Le film n\'existe pas !');
@@ -25,7 +29,33 @@ class MovieController extends ApiController
 
         return $this->json200(
             $movie,
-            ['movie_browse']
+            ['movie_read']
         );
+    }
+
+    #[Route('/api/movies', name: 'app_api_movies_add', methods: ['POST'])]
+    public function add(
+        Request $request,
+        ValidatorInterface $validatorInterface,
+        MovieRepository $movieRepository,
+        SerializerInterface $serializerInterface
+    ): JsonResponse {
+        $content = $request->getContent();
+
+        try {
+            $newMovie = $serializerInterface->deserialize($content, Movie::class, 'json');
+        } catch (Exception $e) {
+            return $this->json400('Le JSON est mal formé.');
+        }
+
+        $errors = $validatorInterface->validate($newMovie);
+
+        if (count($errors) > 0) {
+            return $this->json422($errors);
+        }
+
+        $movieRepository->save($newMovie, true);
+
+        return $this->json201($newMovie, 'app_api_movies_read', 'id', $newMovie->getId());
     }
 }

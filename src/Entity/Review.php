@@ -6,6 +6,7 @@ use App\Repository\ReviewRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ReviewRepository::class)]
 class Review
@@ -13,6 +14,7 @@ class Review
   #[ORM\Id]
   #[ORM\GeneratedValue]
   #[ORM\Column]
+  #[Groups(['movie_read'])]
   private ?int $id = null;
 
   #[ORM\Column(length: 50)]
@@ -23,26 +25,32 @@ class Review
     minMessage: 'Le pesudo doit contenir au minimum {{ limit }} caratères',
     maxMessage: 'Le psueod doit contenir au maximum {{ limit }} caractères',
   )]
+  #[Groups(['movie_read'])]
   private ?string $username = null;
 
   #[ORM\Column(length: 255)]
   #[Assert\NotBlank(message: 'Veuillez entrer une adresse mail valide')]
+  #[Groups(['movie_read'])]
   private ?string $email = null;
 
   #[ORM\Column(type: Types::TEXT)]
   #[Assert\NotBlank(message: 'Quelques mots sur vos impressions !')]
+  #[Groups(['movie_read'])]
   private ?string $content = null;
 
   #[ORM\Column]
   #[Assert\NotBlank(message: 'Mettez au moins une étoile.')]
+  #[Groups(['movie_read'])]
   private ?float $rating = null;
 
   #[ORM\Column]
   #[Assert\NotBlank(message: 'Veuillez sélectionner au moins uen réaction.')]
+  #[Groups(['movie_read'])]
   private array $reactions = [];
 
   #[ORM\Column(type: Types::DATETIME_MUTABLE)]
   #[Assert\NotNull(message: 'Quand avez vous regardé ce film ?')]
+  #[Groups(['movie_read'])]
   private ?\DateTimeInterface $watchedAt = null;
 
   #[ORM\ManyToOne(inversedBy: 'reviews')]

@@ -26,6 +26,26 @@ class ApiController extends AbstractController
     }
 
     /**
+     * Send an 201 response with data
+     *
+     * @param mixed $data
+     * @param string $roadToRedirect name of the road to redirect
+     * @param string $roadParam which is the road param for this road => id? slug? ..etc
+     * @param string|int $slugOrId slug or id object
+     * @return JsonResponse
+     */
+    protected function json201(mixed $data, string $roadToRedirect, string $roadParam, string|int $slugOrId): JsonResponse
+    {
+        return $this->json(
+            $data,
+            Response::HTTP_CREATED,
+            [
+                'location' => $this->generateUrl($roadToRedirect, [$roadParam => $slugOrId])
+            ]
+        );
+    }
+
+    /**
      * Send an 404 response with error message
      *
      * @param string $message
@@ -38,6 +58,38 @@ class ApiController extends AbstractController
                 'error' => $message
             ],
             Response::HTTP_NOT_FOUND
+        );
+    }
+
+    /**
+     * Send an 422 response with error message
+     *
+     * @param string|object $message
+     * @return JsonResponse
+     */
+    protected function json422(string|object $message): JsonResponse
+    {
+        return $this->json(
+            [
+                'error' => $message
+            ],
+            Response::HTTP_UNPROCESSABLE_ENTITY
+        );
+    }
+
+    /**
+     * Send an 400 response with error message
+     *
+     * @param string $message
+     * @return JsonResponse
+     */
+    protected function json400(string $message): JsonResponse
+    {
+        return $this->json(
+            [
+                'error' => $message
+            ],
+            Response::HTTP_BAD_REQUEST
         );
     }
 }

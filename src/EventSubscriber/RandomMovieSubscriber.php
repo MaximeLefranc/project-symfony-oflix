@@ -10,26 +10,31 @@ use Twig\Environment;
 
 class RandomMovieSubscriber implements EventSubscriberInterface
 {
-  private $movieRepository;
-  private $twig;
+    private $movieRepository;
+    private $twig;
 
-  public function __construct(MovieRepository $movieRepository, Environment $twig)
-  {
-    $this->movieRepository = $movieRepository;
-    $this->twig = $twig;
-  }
+    public function __construct(MovieRepository $movieRepository, Environment $twig)
+    {
+        $this->movieRepository = $movieRepository;
+        $this->twig = $twig;
+    }
 
-  public function onKernelController(ControllerEvent $event): void
-  {
-    $movie = $this->movieRepository->findRandomMovie();
-    $this->twig->addGlobal('randomMovie', $movie);
-  }
+    public function onKernelController(ControllerEvent $event): void
+    {
+        $pathinfo = $event->getRequest()->getPathInfo();
+        if (preg_match('/^\/(api|backoffice)/', $pathinfo)) {
+            return;
+        }
 
-  public static function getSubscribedEvents(): array
-  {
-    return [
-      // Event name asociated with the name method
-      KernelEvents::CONTROLLER => 'onKernelController',
-    ];
-  }
+        $movie = $this->movieRepository->findRandomMovie();
+        $this->twig->addGlobal('randomMovie', $movie);
+    }
+
+    public static function getSubscribedEvents(): array
+    {
+        return [
+            // Event name asociated with the name method
+            KernelEvents::CONTROLLER => 'onKernelController',
+        ];
+    }
 }
