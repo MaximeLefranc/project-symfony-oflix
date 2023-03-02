@@ -17,6 +17,12 @@ class MaintenanceSubscriber implements EventSubscriberInterface
   }
   public function onKernelResponse(ResponseEvent $event): void
   {
+    $pathInfo = $event->getRequest()->getPathInfo();
+
+    if (preg_match('/^\/(_profiler|_wdt|backoffice)/', $pathInfo)) {
+      return;
+    }
+
     if ($this->soonInMaintenance) {
       $contentHtml = $event->getResponse()->getContent();
       $event->getResponse()->setContent(str_replace('</nav>', '</nav><div class="alert alert-danger">Maintenance prévue mardi 10 janvier à 17h00</div>', $contentHtml));

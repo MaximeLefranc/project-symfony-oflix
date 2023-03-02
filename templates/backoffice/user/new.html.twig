@@ -1,0 +1,11 @@
+{% extends 'backoffice/backofficebase.html.twig' %}
+
+{% block title %}New User{% endblock %}
+
+{% block body %}
+    <h1>Create new User</h1>
+
+    {{ include('backoffice/user/_form.html.twig') }}
+
+    <a class="btn btn-info" href="{{ path('backoffice_user_index') }}">back to list</a>
+{% endblock %}
