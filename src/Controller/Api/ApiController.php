@@ -32,15 +32,55 @@ class ApiController extends AbstractController
      * @param string $roadToRedirect name of the road to redirect
      * @param string $roadParam which is the road param for this road => id? slug? ..etc
      * @param string|int $slugOrId slug or id object
+     * @param array $groups serrialisation groups
      * @return JsonResponse
      */
-    protected function json201(mixed $data, string $roadToRedirect, string $roadParam, string|int $slugOrId): JsonResponse
-    {
+    protected function json201(
+        mixed $data,
+        string $roadToRedirect,
+        string $roadParam,
+        string|int $slugOrId,
+        array $groups
+    ): JsonResponse {
         return $this->json(
             $data,
             Response::HTTP_CREATED,
             [
-                'location' => $this->generateUrl($roadToRedirect, [$roadParam => $slugOrId])
+                // I'm not sure it work !!
+                'Location' => $this->generateUrl($roadToRedirect, [$roadParam => $slugOrId])
+            ],
+            [
+                'groups' => $groups
+            ]
+        );
+    }
+
+    /**
+     * Send an 206 response with data
+     *
+     * @param mixed $data
+     * @param string $roadToRedirect name of the road to redirect
+     * @param string $roadParam which is the road param for this road => id? slug? ..etc
+     * @param string|int $slugOrId slug or id object
+     * @param array $groups serrialisation groups
+     * @return JsonResponse
+     */
+    protected function json206(
+        mixed $data,
+        string $roadToRedirect,
+        string $roadParam,
+        string|int $slugOrId,
+        array $groups
+    ): JsonResponse {
+        return $this->json(
+            $data,
+            Response::HTTP_PARTIAL_CONTENT,
+            [
+                // I'm not sure it work !!
+                'Location' => $this->generateUrl($roadToRedirect, [$roadParam => $slugOrId])
+            ],
+            [
+                'groups' => $groups
             ]
         );
     }

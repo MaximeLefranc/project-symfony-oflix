@@ -4,10 +4,12 @@ namespace App\Controller\Api;
 
 use App\Entity\Genre;
 use App\Repository\GenreRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -52,12 +54,24 @@ class GenreController extends ApiController
 
         $genreRepository->save($newGenre, true);
 
-        return $this->json201($newGenre, 'app_api_genres_read', 'id', $newGenre->getId());
+        return $this->json201($newGenre, 'app_api_genres_read', 'id', $newGenre->getId(), ['genre_read']);
     }
 
-    // #[Route('/api/genres/{id<\d+>}', name: 'app_api_genres_edit', methods: ['PUT'])]
-    // public function edit(Genre $genre = null): JsonResponse
-    // {
+    #[Route('/api/genres/{id<\d+>}', name: 'app_api_genres_edit', methods: ['PUT', 'PATCH'])]
+    public function edit(
+        ?Genre $genre,
+        Request $request,
+        SerializerInterface $serializerInterface,
+        EntityManagerInterface $entityManagerInterface
+    ): JsonResponse {
+        if (!$genre) {
+            return $this->json404('Pas de genre existant avec cet ID.');
+        }
 
-    // }
+        $jsonContent = $request->getContent();
+
+        $serializerInterface->deserialize($jsonContent, Genre::class, 'json', [AbstractNormalizer::OBJECT_TO_POPULATE => $genre]);
+
+        $entityManagerInterface->flush();
+    }
 }
