@@ -11,27 +11,27 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class UserType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options): void
-    {
-        $builder
-            ->add('email')
-            ->add('roles', ChoiceType::class, [
-                'choices' => [
-                    'Utilisateur' => 'ROLE_USER',
-                    'Gestionnaire' => 'ROLE_MANAGER',
-                    'Administrateur' => 'ROLE_ADMIN'
-                ],
-                'multiple' => true,
-                'expanded' => true,
-            ])
-            ->add('password', PasswordType::class);
-    }
+  public function buildForm(FormBuilderInterface $builder, array $options): void
+  {
+    $builder
+      ->add('email')
+      ->add('roles', ChoiceType::class, [
+        'choices' => [
+          'Utilisateur' => 'ROLE_USER',
+          'Gestionnaire' => 'ROLE_MANAGER',
+          'Administrateur' => 'ROLE_ADMIN',
+        ],
+        'multiple' => true,
+        'expanded' => true,
+      ])
+      ->add('password', PasswordType::class);
+  }
 
-    public function configureOptions(OptionsResolver $resolver): void
-    {
-        $resolver->setDefaults([
-            'data_class' => User::class,
-            'attr' => ['novalidate' => 'novalidate']
-        ]);
-    }
+  public function configureOptions(OptionsResolver $resolver): void
+  {
+    $resolver->setDefaults([
+      'data_class' => User::class,
+      'attr' => ['novalidate' => 'novalidate']
+    ]);
+  }
 }

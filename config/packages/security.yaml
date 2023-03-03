@@ -11,6 +11,19 @@ security:
                 class: App\Entity\User
                 property: email
     firewalls:
+        login:
+            pattern: ^/api/login
+            stateless: true
+            json_login:
+                check_path: /api/login_check
+                success_handler: lexik_jwt_authentication.handler.authentication_success
+                failure_handler: lexik_jwt_authentication.handler.authentication_failure
+
+        api:
+            pattern:   ^/api
+            stateless: true
+            jwt: ~
+
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
@@ -34,6 +47,11 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
+        # Ajout de Lexik-jwt
+        - { path: ^/api/login, roles: PUBLIC_ACCESS }
+        - { path: ^/api, roles: PUBLIC_ACCESS, methods: ['GET'] }
+        - { path: ^/api, roles: IS_AUTHENTICATED_FULL }
+        ###
         - { path: ^/movie/\d+/review, roles: ROLE_USER }
         - { path: ^/backoffice$, roles: ROLE_MANAGER }
         - { path: ^/backoffice/\w+/\d*$, roles: ROLE_MANAGER, methods: GET }

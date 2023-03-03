@@ -8,6 +8,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\SerializerInterface;
@@ -38,6 +39,14 @@ class GenreController extends ApiController
         GenreRepository $genreRepository,
         ValidatorInterface $validatorInterface
     ): JsonResponse {
+        dd($this->isGranted('ROLE_ADMIN'));
+        if (!$this->isGranted('ROLE_ADMIN')) {
+            dd('je suis ici');
+            return $this->json(
+                'Petit maladrin :D',
+                Response::HTTP_FORBIDDEN
+            );
+        }
         $content = $request->getContent();
 
         try {
@@ -64,6 +73,14 @@ class GenreController extends ApiController
         SerializerInterface $serializerInterface,
         EntityManagerInterface $entityManagerInterface
     ): JsonResponse {
+
+        if (!$this->isGranted('ROLE_ADMIN')) {
+            dd('je suis ici');
+            return $this->json(
+                'Petit maladrin :D',
+                Response::HTTP_FORBIDDEN
+            );
+        }
         if (!$genre) {
             return $this->json404('Pas de genre existant avec cet ID.');
         }
@@ -73,5 +90,7 @@ class GenreController extends ApiController
         $serializerInterface->deserialize($jsonContent, Genre::class, 'json', [AbstractNormalizer::OBJECT_TO_POPULATE => $genre]);
 
         $entityManagerInterface->flush();
+
+        return $this->json206($genre, 'app_api_genres_read', 'id', $genre->getId(), ['genre_read']);
     }
 }

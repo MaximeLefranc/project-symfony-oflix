@@ -26,6 +26,9 @@ class UserController extends AbstractController
     #[Route('/new', name: 'backoffice_user_new', methods: ['GET', 'POST'])]
     public function new(Request $request, UserRepository $userRepository, UserPasswordHasherInterface $userPasswordHasher): Response
     {
+        if (!$this->isGranted('ROLE_ADMIN')) {
+            return $this->createAccessDeniedException('Pas les roles nécéssaires pour accéder à cette page.');
+        }
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
