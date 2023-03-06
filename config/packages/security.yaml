@@ -49,8 +49,9 @@ security:
     access_control:
         # Ajout de Lexik-jwt
         - { path: ^/api/login, roles: PUBLIC_ACCESS }
+        - { path: ^/api/factice, roles: PUBLIC_ACCESS }
         - { path: ^/api, roles: PUBLIC_ACCESS, methods: ['GET'] }
-        - { path: ^/api, roles: IS_AUTHENTICATED_FULL }
+        - { path: ^/api, roles: IS_AUTHENTICATED_FULLY, methods: ['POST', 'PATCH', 'PUT', 'DELETE'] }
         ###
         - { path: ^/movie/\d+/review, roles: ROLE_USER }
         - { path: ^/backoffice$, roles: ROLE_MANAGER }

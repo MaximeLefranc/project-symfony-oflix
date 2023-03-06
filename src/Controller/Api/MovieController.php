@@ -7,6 +7,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Controller\Api\ApiController;
 use App\Entity\Movie;
+use App\Services\MySlugger;
+use App\Services\OmdbApi;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Component\HttpFoundation\Request;
@@ -40,7 +42,9 @@ class MovieController extends ApiController
         Request $request,
         ValidatorInterface $validatorInterface,
         MovieRepository $movieRepository,
-        SerializerInterface $serializerInterface
+        SerializerInterface $serializerInterface,
+        OmdbApi $omdbApi,
+        MySlugger $mySlugger
     ): JsonResponse {
         $content = $request->getContent();
 
@@ -56,12 +60,18 @@ class MovieController extends ApiController
             return $this->json422($errors);
         }
 
+        $title = $newMovie->getTitle();
+
+        $newMovie->setPoster($omdbApi->fetchPoster($title));
+
+        $newMovie->setSlug($mySlugger->slugify($title));
+
         $movieRepository->save($newMovie, true);
 
         return $this->json201($newMovie, 'app_api_movies_read', 'id', $newMovie->getId(), ['movie_read']);
     }
 
-    #[Route('api/movies/{id<\d+>}', name: 'app_api_movies_edit', methods: ['PUT', 'PATCH'])]
+    #[Route('/api/movies/{id<\d+>}', name: 'app_api_movies_edit', methods: ['PUT', 'PATCH'])]
     public function edit(
         ?Movie $movie,
         Request $request,
