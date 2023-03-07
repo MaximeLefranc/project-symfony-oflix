@@ -52,6 +52,8 @@ security:
         - { path: ^/api/factice, roles: PUBLIC_ACCESS }
         - { path: ^/api, roles: PUBLIC_ACCESS, methods: ['GET'] }
         - { path: ^/api, roles: IS_AUTHENTICATED_FULLY, methods: ['POST', 'PATCH', 'PUT', 'DELETE'] }
+        #! Only for redirection test !
+        - { path: /backoffice/casting, roles: PUBLIC_ACCESS }
         ###
         - { path: ^/movie/\d+/review, roles: ROLE_USER }
         - { path: ^/backoffice$, roles: ROLE_MANAGER }
