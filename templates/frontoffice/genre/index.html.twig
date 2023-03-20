@@ -17,7 +17,11 @@
                 <h2 class="text-center text-muted fw-bold mb-4">Les genres</h2>
                 <ul class="d-flex flex-column flex-wrap list-unstyled justify-content-center">
                     {% for genre in allGenres %}
-                      <a href={{ path('app_frontoffice_genre_read', {name: genre.name})}}><li class="btn btn-sm btn-outline-danger mx-1 mb-2" style="width: 100%">{{ genre.name }}</li></a>
+                      {% if genre.name == genreName %}
+                        <a href={{ path('app_frontoffice_genre_read', {name: genre.name})}}><li class="btn btn-sm btn-outline-danger mx-1 mb-2" style="width: 100%; background-color: #BB2D3A; color: white">{{ genre.name }}</li></a>
+                      {% else %}
+                        <a href={{ path('app_frontoffice_genre_read', {name: genre.name})}}><li class="btn btn-sm btn-outline-danger mx-1 mb-2" style="width: 100%">{{ genre.name }}</li></a>
+                      {% endif %}
                     {% endfor %}
                 </ul>
             </div>
@@ -26,7 +30,7 @@
 
                 <h2 class="text-muted fw-bold mb-4">Les nouveautés</h2>
 
-                {% for key, movie in allMovies %}
+                {% for key, movie in genre.movies %}
                 <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm bg-white position-relative">
                     <div class="col-4 movie__poster" style="background-image: url({{ movie.poster }});">
                         <img src={{ asset("images/poster-placeholder.png") }} class="img-fluid">
@@ -62,4 +66,3 @@
 
     </div>
 {% endblock %}
-
