@@ -17,7 +17,7 @@
                 <h2 class="text-center text-muted fw-bold mb-4">Les genres</h2>
                 <ul class="d-flex flex-column flex-wrap list-unstyled justify-content-center">
                     {% for genre in allGenres %}
-                      <a href={{ path('app_frontoffice_genre_read', {name: genre.name})}}><li class="btn btn-sm btn-outline-danger mx-1 mb-2" style="width: 100%">{{ genre.name }}</li></a>
+                      <a href={{ path('app_frontoffice_genre_read', {id: genre.id})}}><li class="btn btn-sm btn-outline-danger mx-1 mb-2" style="width: 100%">{{ genre.name }}</li></a>
                     {% endfor %}
                 </ul>
             </div>
