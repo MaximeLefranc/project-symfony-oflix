@@ -117,6 +117,26 @@ class MovieRepository extends ServiceEntityRepository
         return $result->fetchAssociative();
     }
 
+    /**
+     * Search movies array by User's research
+     *
+     * @param string $searchedMovie title searched give by user
+     * @return array|null Movies array if user research give a result or null if don't have result   */
+    public function findMovieBySearchBar(string $searchedMovie): array|null
+    {
+        $movieToSearch = $this->createQueryBuilder('m')
+            ->andWhere('m.title LIKE :searchedMovie')
+            ->setParameter('searchedMovie', '%' . $searchedMovie . '%')
+            ->getQuery()
+            ->execute();
+
+        if (count($movieToSearch) === 0) {
+            return null;
+        }
+
+        return $movieToSearch;
+    }
+
     //    /**
     //     * @return Movie[] Returns an array of Movie objects
     //     */
